@@ -5,37 +5,23 @@ function _init()
  game_state = "hub"
  player = make_player()
  enemy = make_enemy()
- player_attack = make_progress_bar(
-                 20, 10,
-                 {9,10,11,12},
-                 player.attack_speed,
-                 "fight")
- player_xp = make_progress_bar(
-             10, 100,
-             {1,2,3,4},
-             0, "")
- enemy_attack = make_progress_bar(
-                50, 10,
-                {5,6,7,8},
-                enemy.attack_speed,
-                "fight")
 end
 
 function _update()
  if game_state == "hub" then
   if (btn(4)) game_state = "fight"
  end
- animate_bar(player_xp)
- animate_bar(player_attack)
- animate_bar(enemy_attack)
+ animate_bar(player.xp_bar)
+ animate_bar(player.attack_bar)
+ animate_bar(enemy.attack_bar)
 end
 
 function _draw()
  cls()
  print(game_state)
- draw_bar(player_xp)
- draw_bar(player_attack)
- draw_bar(enemy_attack)
+ draw_bar(player.xp_bar)
+ draw_bar(player.attack_bar)
+ draw_bar(enemy.attack_bar)
 end
 -->8
 function make_progress_bar(x, y, sprites, anim_speed, updates_when)
@@ -77,6 +63,16 @@ function make_player()
  player.current_hp = 50
  player.damage = 7
  player.attack_speed = 3
+ player.attack_bar = 
+  make_progress_bar(20, 10,
+                    {9,10,11,12},
+                    player.attack_speed,
+                    "fight")
+ player.xp_bar =
+  make_progress_bar(10, 100,
+                    {1,2,3,4},
+                    0,
+                    "")
  return player
 end
 
@@ -86,6 +82,11 @@ function make_enemy()
  enemy.current_hp = 20
  enemy.damage = 4
  enemy.attack_speed = 5
+ enemy.attack_bar =
+  make_progress_bar(50, 10,
+                    {5,6,7,8},
+                    enemy.attack_speed,
+                    "fight")
  return enemy
 end
 __gfx__
