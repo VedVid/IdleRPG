@@ -125,6 +125,10 @@ function make_enemy()
 end
 
 function fight(player, enemy)
+ if (player.current_hp <= 0 or
+     enemy.current_hp <= 0) then
+  game_state = "hub"
+ end
  if (player.attack_bar.frame == 1 and
      player.attack_bar.tick == 0) then
   enemy.current_hp -= flr(rnd(player.damage+1))
