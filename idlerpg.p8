@@ -66,8 +66,9 @@ function make_player()
  local player = {}
  player.max_hp = 10
  player.current_hp = 10
- player.damage = 7
+ player.damage = 3
  player.attack_speed = 3
+ player.defense = 2
  player.current_xp = 0
  player.xp_to_lvl_up = 100
  player.attack_bar = 
@@ -100,8 +101,9 @@ function make_enemy()
  local enemy = {}
  enemy.max_hp = 5
  enemy.current_hp = 5
- enemy.damage = 4
+ enemy.damage = 2
  enemy.attack_speed = 5
+ enemy.defense = 2
  enemy.xp = 50
  enemy.attack_bar =
   make_progress_bar(50, 10,
@@ -114,7 +116,7 @@ end
 function fight(player, enemy)
  if (player.attack_bar.frame == 1 and
      player.attack_bar.tick == 0) then
-  enemy.current_hp -= 1
+  enemy.current_hp -= flr(rnd(player.damage+1))
  end
  if (enemy.current_hp <= 0) then
   player.current_xp += enemy.xp
@@ -122,7 +124,7 @@ function fight(player, enemy)
  end
  if (enemy.attack_bar.frame == 1 and
      player.attack_bar.tick == 0) then
-  player.current_hp -= 1
+  player.current_hp -= flr(rnd(enemy.damage+1))
  end
  if (player.current_hp <= 0) then
   game_state = "hub"
