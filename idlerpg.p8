@@ -28,17 +28,19 @@ end
 
 function _draw()
  cls()
- print(game_state)
- draw_bar(player.hp_bar)
- draw_bar(player.xp_bar)
- draw_bar(player.attack_bar)
- draw_bar(enemy.attack_bar)
+ print(game_state, 4, 4)
+ print("p.attack:", 8, 16)
+ draw_bar(player.attack_bar, 48, 16)
+ print("p.hp:", 8, 64)
+ draw_bar(player.hp_bar, 32, 64)
+ print("p.xp:", 48, 64)
+ draw_bar(player.xp_bar, 72, 64)
+ print("e.attack:", 64, 16)
+ draw_bar(enemy.attack_bar, 104, 16)
 end
 -->8
-function make_progress_bar(x, y, sprites, anim_speed)
+function make_progress_bar(sprites, anim_speed)
  local bar={}
- bar.x = x
- bar.y = y
  bar.sprites = sprites
  bar.anim_speed = anim_speed
  bar.tick = 0
@@ -58,9 +60,9 @@ function restart_bar(bar)
  bar.frame = 1
 end
 
-function draw_bar(bar)
+function draw_bar(bar, x, y)
  spr(bar.sprites[bar.frame],
-     bar.x, bar.y)
+     x, y)
 end
 -->8
 function make_player()
@@ -73,17 +75,14 @@ function make_player()
  player.current_xp = 0
  player.xp_to_lvl_up = 100
  player.attack_bar = 
-  make_progress_bar(20, 10,
-                    {9,10,11,12},
+  make_progress_bar({9,10,11,12},
                     player.attack_speed)
  player.hp_bar =
-  make_progress_bar(10, 100,
-                    {5,6,7,8},
+  make_progress_bar({5,6,7,8},
                     0)
  player.hp_bar.frame = 4
  player.xp_bar =
-  make_progress_bar(30, 100,
-                    {1,2,3,4},
+  make_progress_bar({1,2,3,4},
                     0)
  return player
 end
@@ -111,8 +110,7 @@ function make_enemy()
  enemy.defense = 2
  enemy.xp = 50
  enemy.attack_bar =
-  make_progress_bar(50, 10,
-                    {5,6,7,8},
+  make_progress_bar({5,6,7,8},
                     enemy.attack_speed)
  return enemy
 end
@@ -148,10 +146,9 @@ function fight(player, enemy)
 end
 
 __gfx__
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000999999999999999999999999999999998888888888888888888888888888888833333333333333333333333333333333000000000000000000000000
+00000000900000099aa000099aaaa0099aaaaaa9800000088ee000088eeee0088eeeeee8300000033bb000033bbbb0033bbbbbb3000000000000000000000000
 00700700900000099aa000099aaaa0099aaaaaa9800000088ee000088eeee0088eeeeee8300000033bb000033bbbb0033bbbbbb3000000000000000000000000
 00077000900000099aa000099aaaa0099aaaaaa9800000088ee000088eeee0088eeeeee8300000033bb000033bbbb0033bbbbbb3000000000000000000000000
 00077000900000099aa000099aaaa0099aaaaaa9800000088ee000088eeee0088eeeeee8300000033bb000033bbbb0033bbbbbb3000000000000000000000000
-00700700900000099aa000099aaaa0099aaaaaa9800000088ee000088eeee0088eeeeee8300000033bb000033bbbb0033bbbbbb3000000000000000000000000
-00000000999999999999999999999999999999998888888888888888888888888888888833333333333333333333333333333333000000000000000000000000
+00700700999999999999999999999999999999998888888888888888888888888888888833333333333333333333333333333333000000000000000000000000
