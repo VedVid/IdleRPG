@@ -76,11 +76,15 @@ function make_player()
                     {9,10,11,12},
                     player.attack_speed,
                     "fight")
- player.xp_bar =
+ player.hp_bar =
   make_progress_bar(10, 100,
+                    {5,6,7,8},
+                    0, "")
+ player.hp_bar.frame = 4
+ player.xp_bar =
+  make_progress_bar(30, 100,
                     {1,2,3,4},
-                    0,
-                    "")
+                    0, "")
  return player
 end
 
