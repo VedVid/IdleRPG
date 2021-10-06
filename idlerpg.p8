@@ -16,7 +16,9 @@ function _update()
  if game_state == "fight" then
   fight(player, enemy)
  end
- player.xp_bar.frame = calc_xp_bar()
+ player.xp_bar.frame =
+  calc_static_bar(player.current_xp,
+                  player.xp_to_lvl_up)
  animate_bar(player.attack_bar)
  animate_bar(enemy.attack_bar)
 end
@@ -88,17 +90,18 @@ function make_player()
  return player
 end
 
-function calc_xp_bar()
- if (player.current_xp < player.xp_to_lvl_up * 0.25) then
-  xp_sprite = 1
- elseif (player.current_xp < player.xp_to_lvl_up * 0.5) then
-  xp_sprite = 2
- elseif (player.current_xp < player.xp_to_lvl_up * 0.75) then
-  xp_sprite = 3
+function calc_static_bar(val1, val2)
+ local sprite
+ if (val1 < val2 * 0.25) then
+  sprite = 1
+ elseif (val1 < val2 * 0.5) then
+  sprite = 2
+ elseif (val1 < val2 * 0.75) then
+  sprite = 3
  else
-  xp_sprite = 4
+  sprite = 4
  end
- return xp_sprite
+ return sprite
 end
 
 function make_enemy()
