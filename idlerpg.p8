@@ -16,7 +16,7 @@ function _update()
  if game_state == "fight" then
   fight(player, enemy)
  end
- animate_bar(player.xp_bar)
+ player.xp_bar.frame = calc_xp_bar()
  animate_bar(player.attack_bar)
  animate_bar(enemy.attack_bar)
 end
@@ -68,6 +68,8 @@ function make_player()
  player.current_hp = 10
  player.damage = 7
  player.attack_speed = 3
+ player.current_xp = 0
+ player.xp_to_lvl_up = 100
  player.attack_bar = 
   make_progress_bar(20, 10,
                     {9,10,11,12},
@@ -81,12 +83,26 @@ function make_player()
  return player
 end
 
+function calc_xp_bar()
+ if (player.current_xp < player.xp_to_lvl_up * 0.25) then
+  xp_sprite = 1
+ elseif (player.current_xp < player.xp_to_lvl_up * 0.5) then
+  xp_sprite = 2
+ elseif (player.current_xp < player.xp_to_lvl_up * 0.75) then
+  xp_sprite = 3
+ else
+  xp_sprite = 4
+ end
+ return xp_sprite
+end
+
 function make_enemy()
  local enemy = {}
  enemy.max_hp = 5
  enemy.current_hp = 5
  enemy.damage = 4
  enemy.attack_speed = 5
+ enemy.xp = 50
  enemy.attack_bar =
   make_progress_bar(50, 10,
                     {5,6,7,8},
@@ -101,6 +117,7 @@ function fight(player, enemy)
   enemy.current_hp -= 1
  end
  if (enemy.current_hp <= 0) then
+  player.current_xp += enemy.xp
   game_state = "hub"
  end
  if (enemy.attack_bar.frame == 1 and
