@@ -1,29 +1,58 @@
 pico-8 cartridge // http://www.pico-8.com
 version 33
 __lua__
-t=0
-
 function _init()
- player_xp = {sp=1, x=10, y=10}
- enemy_attack = {sp=5, x=50, y=30}
- player_attack = {sp=9, x=10, y=30}
+ player_xp = make_progress_bar(
+             10, 100,
+             {1,2,3,4},
+             10, "")
+ enemy_attack = make_progress_bar(
+                50, 10,
+                {5,6,7,8},
+                7, "")
+ player_attack = make_progress_bar(
+                 20, 10,
+                 {9,10,11,12},
+                 3, "")
 end
 
 function _update()
- t = t+1
+ animate_bar(player_xp)
+ animate_bar(player_attack)
+ animate_bar(enemy_attack)
 end
 
 function _draw()
  cls()
- spr(player_attack.sp,
-     player_attack.x,
-     player_attack.y)
- spr(enemy_attack.sp,
-     enemy_attack.x,
-     enemy_attack.y)
- spr(player_xp.sp,
-     player_xp.x,
-     player_xp.y)
+ draw_bar(player_xp)
+ draw_bar(player_attack)
+ draw_bar(enemy_attack)
+end
+-->8
+function make_progress_bar(x, y, sprites, anim_speed, updates_when)
+ local bar={}
+ 
+ bar.x = x
+ bar.y = y
+ bar.sprites = sprites
+ bar.anim_speed = anim_speed
+ bar.updates_when = updates_when
+ bar.tick = 0
+ bar.frame = 1
+
+ return bar
+end
+
+function animate_bar(bar)
+ bar.tick = (bar.tick+1) % bar.anim_speed
+ if (bar.tick==0) then
+  bar.frame = (bar.frame%#bar.sprites)+1
+ end
+end
+
+function draw_bar(bar)
+ spr(bar.sprites[bar.frame],
+     bar.x, bar.y)
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
