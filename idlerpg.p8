@@ -9,7 +9,12 @@ end
 
 function _update()
  if game_state == "hub" then
+  restart_bar(player.attack_bar)
+  restart_bar(enemy.attack_bar)
   if (btn(4)) game_state = "fight"
+ end
+ if game_state == "fight" then
+  fight(player, enemy)
  end
  animate_bar(player.xp_bar)
  animate_bar(player.attack_bar)
@@ -59,8 +64,8 @@ end
 -->8
 function make_player()
  local player = {}
- player.max_hp = 50
- player.current_hp = 50
+ player.max_hp = 10
+ player.current_hp = 10
  player.damage = 7
  player.attack_speed = 3
  player.attack_bar = 
@@ -78,8 +83,8 @@ end
 
 function make_enemy()
  local enemy = {}
- enemy.max_hp = 20
- enemy.current_hp = 20
+ enemy.max_hp = 5
+ enemy.current_hp = 5
  enemy.damage = 4
  enemy.attack_speed = 5
  enemy.attack_bar =
@@ -88,6 +93,23 @@ function make_enemy()
                     enemy.attack_speed,
                     "fight")
  return enemy
+end
+
+function fight(player, enemy)
+ if (player.attack_bar.frame == 1 and
+     player.attack_bar.tick == 0) then
+  enemy.current_hp -= 1
+ end
+ if (enemy.current_hp <= 0) then
+  game_state = "hub"
+ end
+ if (enemy.attack_bar.frame == 1 and
+     player.attack_bar.tick == 0) then
+  player.current_hp -= 1
+ end
+ if (player.current_hp <= 0) then
+  game_state = "hub"
+ end
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
