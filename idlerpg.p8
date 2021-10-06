@@ -3,6 +3,13 @@ version 33
 __lua__
 function _init()
  game_state = "hub"
+ player = make_player()
+ enemy = make_enemy()
+ player_attack = make_progress_bar(
+                 20, 10,
+                 {9,10,11,12},
+                 player.attack_speed,
+                 "fight")
  player_xp = make_progress_bar(
              10, 100,
              {1,2,3,4},
@@ -10,19 +17,11 @@ function _init()
  enemy_attack = make_progress_bar(
                 50, 10,
                 {5,6,7,8},
-                7, "fight")
- player_attack = make_progress_bar(
-                 20, 10,
-                 {9,10,11,12},
-                 3, "fight")
+                enemy.attack_speed,
+                "fight")
 end
 
 function _update()
- if (enemy_attack.frame == 1 and enemy_attack.tick == 0) then
-  game_state = "hub"
-  restart_bar(enemy_attack)
-  restart_bar(player_attack)
- end
  if game_state == "hub" then
   if (btn(4)) game_state = "fight"
  end
@@ -70,6 +69,24 @@ end
 function draw_bar(bar)
  spr(bar.sprites[bar.frame],
      bar.x, bar.y)
+end
+-->8
+function make_player()
+ local player = {}
+ player.max_hp = 50
+ player.current_hp = 50
+ player.damage = 7
+ player.attack_speed = 3
+ return player
+end
+
+function make_enemy()
+ local enemy = {}
+ enemy.max_hp = 20
+ enemy.current_hp = 20
+ enemy.damage = 4
+ enemy.attack_speed = 5
+ return enemy
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
