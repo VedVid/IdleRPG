@@ -14,6 +14,8 @@ function _update()
   if (btn(4)) game_state = "fight"
  end
  if game_state == "fight" then
+  animate_bar(player.attack_bar)
+  animate_bar(enemy.attack_bar)
   fight(player, enemy)
  end
  player.hp_bar.frame =
@@ -22,8 +24,6 @@ function _update()
  player.xp_bar.frame =
   calc_static_bar(player.current_xp,
                   player.xp_to_lvl_up)
- animate_bar(player.attack_bar)
- animate_bar(enemy.attack_bar)
 end
 
 function _draw()
@@ -35,26 +35,21 @@ function _draw()
  draw_bar(enemy.attack_bar)
 end
 -->8
-function make_progress_bar(x, y, sprites, anim_speed, updates_when)
+function make_progress_bar(x, y, sprites, anim_speed)
  local bar={}
- 
  bar.x = x
  bar.y = y
  bar.sprites = sprites
  bar.anim_speed = anim_speed
- bar.updates_when = updates_when
  bar.tick = 0
  bar.frame = 1
-
  return bar
 end
 
 function animate_bar(bar)
- if game_state == bar.updates_when then
-  bar.tick = (bar.tick+1) % bar.anim_speed
-  if (bar.tick==0) then
-   bar.frame = (bar.frame%#bar.sprites)+1
-  end
+ bar.tick = (bar.tick+1) % bar.anim_speed
+ if (bar.tick==0) then
+  bar.frame = (bar.frame%#bar.sprites)+1
  end
 end
 
@@ -80,17 +75,16 @@ function make_player()
  player.attack_bar = 
   make_progress_bar(20, 10,
                     {9,10,11,12},
-                    player.attack_speed,
-                    "fight")
+                    player.attack_speed)
  player.hp_bar =
   make_progress_bar(10, 100,
                     {5,6,7,8},
-                    0, "")
+                    0)
  player.hp_bar.frame = 4
  player.xp_bar =
   make_progress_bar(30, 100,
                     {1,2,3,4},
-                    0, "")
+                    0)
  return player
 end
 
@@ -119,29 +113,36 @@ function make_enemy()
  enemy.attack_bar =
   make_progress_bar(50, 10,
                     {5,6,7,8},
-                    enemy.attack_speed,
-                    "fight")
+                    enemy.attack_speed)
  return enemy
 end
 
 function fight(player, enemy)
+ local all_alive = true
  if (player.current_hp <= 0 or
      enemy.current_hp <= 0) then
-  game_state = "hub"
+  all_alive = false
  end
- if (player.attack_bar.frame == 1 and
-     player.attack_bar.tick == 0) then
-  enemy.current_hp -= flr(rnd(player.damage+1))
+ if all_alive == true then
+  if (player.attack_bar.frame == 1 and
+      player.attack_bar.tick == 0) then
+   enemy.current_hp -= flr(rnd(player.damage+1))
+  end
  end
  if (enemy.current_hp <= 0) then
   player.current_xp += enemy.xp
-  game_state = "hub"
+  all_alive = false
  end
- if (enemy.attack_bar.frame == 1 and
-     player.attack_bar.tick == 0) then
-  player.current_hp -= flr(rnd(enemy.damage+1))
+ if all_alive == true then
+  if (enemy.attack_bar.frame == 1 and
+      player.attack_bar.tick == 0) then
+   player.current_hp -= flr(rnd(enemy.damage+1))
+  end
  end
  if (player.current_hp <= 0) then
+  all_alive = false
+ end
+ if all_alive == false then
   game_state = "hub"
  end
 end
