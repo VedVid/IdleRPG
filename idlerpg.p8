@@ -126,19 +126,19 @@ function fight(player, enemy)
       player.attack_bar.tick == 0) then
    enemy.current_hp -= flr(rnd(player.damage+1))
   end
- end
- if (enemy.current_hp <= 0) then
-  player.current_xp += enemy.xp
-  all_alive = false
+  if (enemy.current_hp <= 0) then
+   player.current_xp += enemy.xp
+   all_alive = false
+  end
  end
  if all_alive == true then
   if (enemy.attack_bar.frame == 1 and
       player.attack_bar.tick == 0) then
    player.current_hp -= flr(rnd(enemy.damage+1))
   end
- end
- if (player.current_hp <= 0) then
-  all_alive = false
+  if (player.current_hp <= 0) then
+   all_alive = false
+  end
  end
  if all_alive == false then
   game_state = "hub"
