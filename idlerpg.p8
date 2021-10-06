@@ -2,21 +2,30 @@ pico-8 cartridge // http://www.pico-8.com
 version 33
 __lua__
 function _init()
+ game_state = "hub"
  player_xp = make_progress_bar(
              10, 100,
              {1,2,3,4},
-             10, "")
+             0, "")
  enemy_attack = make_progress_bar(
                 50, 10,
                 {5,6,7,8},
-                7, "")
+                7, "fight")
  player_attack = make_progress_bar(
                  20, 10,
                  {9,10,11,12},
-                 3, "")
+                 3, "fight")
 end
 
 function _update()
+ if (enemy_attack.frame == 1 and enemy_attack.tick == 0) then
+  game_state = "hub"
+  restart_bar(enemy_attack)
+  restart_bar(player_attack)
+ end
+ if game_state == "hub" then
+  if (btn(4)) game_state = "fight"
+ end
  animate_bar(player_xp)
  animate_bar(player_attack)
  animate_bar(enemy_attack)
@@ -24,6 +33,7 @@ end
 
 function _draw()
  cls()
+ print(game_state)
  draw_bar(player_xp)
  draw_bar(player_attack)
  draw_bar(enemy_attack)
@@ -44,10 +54,17 @@ function make_progress_bar(x, y, sprites, anim_speed, updates_when)
 end
 
 function animate_bar(bar)
- bar.tick = (bar.tick+1) % bar.anim_speed
- if (bar.tick==0) then
-  bar.frame = (bar.frame%#bar.sprites)+1
+ if game_state == bar.updates_when then
+  bar.tick = (bar.tick+1) % bar.anim_speed
+  if (bar.tick==0) then
+   bar.frame = (bar.frame%#bar.sprites)+1
+  end
  end
+end
+
+function restart_bar(bar)
+ bar.tick = 0
+ bar.frame = 1
 end
 
 function draw_bar(bar)
