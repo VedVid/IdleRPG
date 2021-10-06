@@ -16,6 +16,9 @@ function _update()
  if game_state == "fight" then
   fight(player, enemy)
  end
+ player.hp_bar.frame =
+  calc_static_bar(player.current_hp,
+                  player.max_hp)
  player.xp_bar.frame =
   calc_static_bar(player.current_xp,
                   player.xp_to_lvl_up)
@@ -26,6 +29,7 @@ end
 function _draw()
  cls()
  print(game_state)
+ draw_bar(player.hp_bar)
  draw_bar(player.xp_bar)
  draw_bar(player.attack_bar)
  draw_bar(enemy.attack_bar)
@@ -137,6 +141,7 @@ function fight(player, enemy)
   game_state = "hub"
  end
 end
+
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000999999999999999999999999999999998888888888888888888888888888888833333333333333333333333333333333000000000000000000000000
