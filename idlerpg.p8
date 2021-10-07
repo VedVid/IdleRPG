@@ -44,6 +44,7 @@ function _draw()
  print("e.attack:", 64, 16, 7)
  draw_bar(enemy.attack_bar, 104, 16)
 end
+
 -->8
 function make_progress_bar(sprites, anim_speed)
  local bar={}
@@ -70,6 +71,7 @@ function draw_bar(bar, x, y)
  spr(bar.sprites[bar.frame],
      x, y)
 end
+
 -->8
 function make_player()
  local player = {}
