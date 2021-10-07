@@ -31,12 +31,13 @@ function _draw()
  print(game_state, 4, 4, 7)
  print("p.attack:", 8, 16, 7)
  draw_bar(player.attack_bar, 48, 16)
- print("hp: ", 8, 80, 7)
- draw_bar(player.hp_bar, 21, 80)
- print(player.current_hp.."/"..player.max_hp, 32, 80, 8)
- print("xp: ", 8, 88, 7)
- draw_bar(player.xp_bar, 21, 88)
- print(player.current_xp, 32, 88, 9)
+ draw_eq(8, 32, player.equipment)
+ print("hp: ", 8, 104, 7)
+ draw_bar(player.hp_bar, 21, 104)
+ print(player.current_hp.."/"..player.max_hp, 32, 104, 8)
+ print("xp: ", 8, 112, 7)
+ draw_bar(player.xp_bar, 21, 112)
+ print(player.current_xp, 32, 112, 9)
  print("e.attack:", 64, 16, 7)
  draw_bar(enemy.attack_bar, 104, 16)
 end
@@ -86,6 +87,14 @@ function make_player()
  player.xp_bar =
   make_progress_bar({1,2,3,4},
                     0)
+ player.equipment = {}
+ player.equipment.head = "head"
+ player.equipment.torso = "torso"
+ player.equipment.arms = "arms"
+ player.equipment.left_hand = "left hand"
+ player.equipment.right_hand = "right_hand"
+ player.equipment.legs = "legs"
+ player.equipment.feet = "feet"
  return player
 end
 
@@ -101,6 +110,17 @@ function calc_static_bar(val1, val2)
   sprite = 4
  end
  return sprite
+end
+
+function draw_eq(x, y, eq)
+ print("equipment:", x-4, y, 7)
+ print("head:   "..eq.head, x, y+8, 7)
+ print("torso:  "..eq.torso, x, y+16, 7)
+ print("arms:   "..eq.arms, x, y+24, 7)
+ print("r hand: "..eq.right_hand, x, y+32, 7)
+ print("l hand: "..eq.left_hand, x, y+40, 7)
+ print("legs:   "..eq.legs, x, y+48, 7)
+ print("feet:   "..eq.feet, x, y+56, 7)
 end
 
 function make_enemy()
