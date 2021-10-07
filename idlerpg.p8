@@ -95,19 +95,24 @@ function make_player()
  player.gold = 0
  player.equipment = {}
  player.equipment.head = {
-  name = "l.cap", def = 1}
+  name = "l.cap", lvl = 1,
+  def = 1}
  player.equipment.torso = {
-  name = "l.vest", def = 1}
+  name = "l.vest", lvl = 1,
+  def = 1}
  player.equipment.arms = {
-  name = "l.gauntlet", def = 1}
+  name = "l.gauntlet", lvl = 1,
+  def = 1}
  player.equipment.right_hand = {
-  name = "sh.sword", dmg = 3, as = 3}
+  name = "sh.sword", lvl = 1,
+  dmg = 3, as = 3}
  player.equipment.left_hand = {
-  name = "nothing"}
+  name = "nothing", lvl = 0}
  player.equipment.legs = {
-  name = "cl.trousers"}
+  name = "cl.trousers", lvl = 1}
  player.equipment.feet = {
-  name = "l.boots", def = 1}
+  name = "l.boots", lvl = 1,
+  def = 1}
  return player
 end
 
@@ -149,13 +154,13 @@ end
 
 function draw_eq(x, y, eq)
  print("equipment:", x-4, y, 7)
- print("head:   "..eq.head.name, x, y+8, 7)
- print("torso:  "..eq.torso.name, x, y+16, 7)
- print("arms:   "..eq.arms.name, x, y+24, 7)
- print("r hand: "..eq.right_hand.name, x, y+32, 7)
- print("l hand: "..eq.left_hand.name, x, y+40, 7)
- print("legs:   "..eq.legs.name, x, y+48, 7)
- print("feet:   "..eq.feet.name, x, y+56, 7)
+ print("head:   "..eq.head.name.." (lvl."..eq.head.lvl..")", x, y+8, 7)
+ print("torso:  "..eq.torso.name.." (lvl."..eq.torso.lvl..")", x, y+16, 7)
+ print("arms:   "..eq.arms.name.." (lvl."..eq.arms.lvl..")", x, y+24, 7)
+ print("r hand: "..eq.right_hand.name.." (lvl."..eq.right_hand.lvl..")", x, y+32, 7)
+ print("l hand: "..eq.left_hand.name.." (lvl."..eq.left_hand.lvl..")", x, y+40, 7)
+ print("legs:   "..eq.legs.name.." (lvl."..eq.legs.lvl..")", x, y+48, 7)
+ print("feet:   "..eq.feet.name.." (lvl."..eq.feet.lvl..")", x, y+56, 7)
 end
 
 function make_enemy()
