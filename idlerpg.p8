@@ -8,6 +8,7 @@ function _init()
 end
 
 function _update()
+ calc_player_eq()
  if game_state == "hub" then
   restart_bar(player.attack_bar)
   restart_bar(enemy.attack_bar)
@@ -72,9 +73,9 @@ function make_player()
  local player = {}
  player.max_hp = 10
  player.current_hp = 10
- player.damage = 3
- player.attack_speed = 3
- player.defense = 2
+ player.damage = 0
+ player.attack_speed = 0
+ player.defense = 0
  player.current_xp = 0
  player.xp_to_lvl_up = 100
  player.attack_bar = 
@@ -88,13 +89,6 @@ function make_player()
   make_progress_bar({1,2,3,4},
                     0)
  player.equipment = {}
- player.equipment.head = "head"
- player.equipment.torso = "torso"
- player.equipment.arms = "arms"
- player.equipment.left_hand = "left hand"
- player.equipment.right_hand = "right_hand"
- player.equipment.legs = "legs"
- player.equipment.feet = "feet"
  player.equipment.head = {
   name = "l.cap", def = 1}
  player.equipment.torso = {
@@ -102,7 +96,7 @@ function make_player()
  player.equipment.arms = {
   name = "l.gauntlet", def = 1}
  player.equipment.left_hand = {
-  name = "sh.sword", att = 2, as = 3}
+  name = "sh.sword", dmg = 3, as = 3}
  player.equipment.right_hand = {
   name = "nothing"}
  player.equipment.legs = {
@@ -111,6 +105,28 @@ function make_player()
   name = "l.boots", def = 1}
  return player
 end
+
+function calc_player_eq()
+ local dmg = 0
+ local as = 0
+ local def = 0
+ for k, v in pairs(player.equipment) do
+  if v.dmg then
+   dmg += v.dmg
+  end
+  if v.as then
+   as += v.as
+  end
+  if v.def then
+   def += v.def
+  end
+ end
+ player.damage = dmg
+ player.attack_speed = as
+ player.defense = def
+ player.attack_bar.anim_speed = player.attack_speed
+end
+ 
 
 function calc_static_bar(val1, val2)
  local sprite
@@ -128,13 +144,6 @@ end
 
 function draw_eq(x, y, eq)
  print("equipment:", x-4, y, 7)
- print("head:   "..eq.head, x, y+8, 7)
- print("torso:  "..eq.torso, x, y+16, 7)
- print("arms:   "..eq.arms, x, y+24, 7)
- print("r hand: "..eq.right_hand, x, y+32, 7)
- print("l hand: "..eq.left_hand, x, y+40, 7)
- print("legs:   "..eq.legs, x, y+48, 7)
- print("feet:   "..eq.feet, x, y+56, 7)
  print("head:   "..eq.head.name, x, y+8, 7)
  print("torso:  "..eq.torso.name, x, y+16, 7)
  print("arms:   "..eq.arms.name, x, y+24, 7)
