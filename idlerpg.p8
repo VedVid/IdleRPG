@@ -95,6 +95,20 @@ function make_player()
  player.equipment.right_hand = "right_hand"
  player.equipment.legs = "legs"
  player.equipment.feet = "feet"
+ player.equipment.head = {
+  name = "l.cap", def = 1}
+ player.equipment.torso = {
+  name = "l.vest", def = 1}
+ player.equipment.arms = {
+  name = "l.gauntlet", def = 1}
+ player.equipment.left_hand = {
+  name = "sh.sword", att = 2, as = 3}
+ player.equipment.right_hand = {
+  name = "nothing"}
+ player.equipment.legs = {
+  name = "cl.trousers"}
+ player.equipment.feet = {
+  name = "l.boots", def = 1}
  return player
 end
 
@@ -121,6 +135,13 @@ function draw_eq(x, y, eq)
  print("l hand: "..eq.left_hand, x, y+40, 7)
  print("legs:   "..eq.legs, x, y+48, 7)
  print("feet:   "..eq.feet, x, y+56, 7)
+ print("head:   "..eq.head.name, x, y+8, 7)
+ print("torso:  "..eq.torso.name, x, y+16, 7)
+ print("arms:   "..eq.arms.name, x, y+24, 7)
+ print("r hand: "..eq.right_hand.name, x, y+32, 7)
+ print("l hand: "..eq.left_hand.name, x, y+40, 7)
+ print("legs:   "..eq.legs.name, x, y+48, 7)
+ print("feet:   "..eq.feet.name, x, y+56, 7)
 end
 
 function make_enemy()
