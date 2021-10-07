@@ -39,6 +39,8 @@ function _draw()
  print("xp: ", 8, 112, 7)
  draw_bar(player.xp_bar, 21, 112)
  print(player.current_xp, 32, 112, 9)
+ print("gold: ", 8, 120, 7)
+ print(player.gold, 32, 120, 10) 
  print("e.attack:", 64, 16, 7)
  draw_bar(enemy.attack_bar, 104, 16)
 end
@@ -88,6 +90,7 @@ function make_player()
  player.xp_bar =
   make_progress_bar({1,2,3,4},
                     0)
+ player.gold = 0
  player.equipment = {}
  player.equipment.head = {
   name = "l.cap", def = 1}
@@ -161,6 +164,7 @@ function make_enemy()
  enemy.attack_speed = 5
  enemy.defense = 2
  enemy.xp = 50
+ enemy.gold = 25
  enemy.attack_bar =
   make_progress_bar({5,6,7,8},
                     enemy.attack_speed)
@@ -180,6 +184,7 @@ function fight(player, enemy)
   end
   if (enemy.current_hp <= 0) then
    player.current_xp += enemy.xp
+   player.gold += enemy.gold
    all_alive = false
   end
  end
