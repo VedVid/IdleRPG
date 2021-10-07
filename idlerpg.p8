@@ -100,9 +100,9 @@ function make_player()
   name = "l.vest", def = 1}
  player.equipment.arms = {
   name = "l.gauntlet", def = 1}
- player.equipment.left_hand = {
-  name = "sh.sword", dmg = 3, as = 3}
  player.equipment.right_hand = {
+  name = "sh.sword", dmg = 3, as = 3}
+ player.equipment.left_hand = {
   name = "nothing"}
  player.equipment.legs = {
   name = "cl.trousers"}
