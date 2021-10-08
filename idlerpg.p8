@@ -31,9 +31,10 @@ function _update()
   if (btnp(4)) then
    if not game_fight then
     if button_chosen == 1 then
-     game_scene = "eq"
-    elseif button_chosen == 2 then
      game_fight = true
+    elseif button_chosen == 2 then
+     button_chosen = 1
+     game_scene = "eq"
     end
    end
   end
@@ -241,12 +242,12 @@ end
 
 function make_game_menu()
  local buttons = {}
- local eq_button = make_button(100,
-  104, "eq")
- add(buttons, eq_button)
  local explore_button = make_button(
-  100, 112, "explore")
+  100, 104, "explore")
  add(buttons, explore_button)
+ local eq_button = make_button(100,
+  112, "eq")
+ add(buttons, eq_button)
  return buttons
 end
 
