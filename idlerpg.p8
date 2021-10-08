@@ -174,14 +174,14 @@ function calc_static_bar(val1, val2)
 end
 
 function draw_eq(x, y, eq)
- print("equipment:", x-4, y, 7)
- print("head:   "..eq.head.name.." (lvl."..eq.head.lvl..")", x, y+8, 7)
- print("torso:  "..eq.torso.name.." (lvl."..eq.torso.lvl..")", x, y+16, 7)
- print("arms:   "..eq.arms.name.." (lvl."..eq.arms.lvl..")", x, y+24, 7)
- print("r hand: "..eq.right_hand.name.." (lvl."..eq.right_hand.lvl..")", x, y+32, 7)
- print("l hand: "..eq.left_hand.name.." (lvl."..eq.left_hand.lvl..")", x, y+40, 7)
- print("legs:   "..eq.legs.name.." (lvl."..eq.legs.lvl..")", x, y+48, 7)
- print("feet:   "..eq.feet.name.." (lvl."..eq.feet.lvl..")", x, y+56, 7)
+ print("equipment:", x-4, y, 6)
+ print("head:   "..eq.head.name.." (lvl."..eq.head.lvl..")", x, y+8, 6)
+ print("torso:  "..eq.torso.name.." (lvl."..eq.torso.lvl..")", x, y+16, 6)
+ print("arms:   "..eq.arms.name.." (lvl."..eq.arms.lvl..")", x, y+24, 6)
+ print("r hand: "..eq.right_hand.name.." (lvl."..eq.right_hand.lvl..")", x, y+32, 6)
+ print("l hand: "..eq.left_hand.name.." (lvl."..eq.left_hand.lvl..")", x, y+40, 6)
+ print("legs:   "..eq.legs.name.." (lvl."..eq.legs.lvl..")", x, y+48, 6)
+ print("feet:   "..eq.feet.name.." (lvl."..eq.feet.lvl..")", x, y+56, 6)
 end
 
 function make_enemy()
@@ -252,7 +252,7 @@ end
 
 function draw_buttons(buttons)
  for i = 1, #buttons do
-  col = 6
+  col = 5
   if i == button_chosen then
    col = 7
   end
@@ -294,22 +294,22 @@ end
 
 -->8
 function draw_main_scene()
- print(game_place, 8, 4, 7)
+ print(game_place, 8, 4, 6)
  if game_fight then
   print("fight", 48, 4, 8)
  end
- print("p.attack:", 8, 16, 7)
+ print("p.attack:", 8, 16, 6)
  draw_bar(player.attack_bar, 48, 16)
- print("e.attack:", 64, 16, 7)
+ print("e.attack:", 64, 16, 6)
  draw_bar(enemy.attack_bar, 104, 16)
  
- print("hp: ", 8, 104, 7)
+ print("hp: ", 8, 104, 6)
  draw_bar(player.hp_bar, 21, 104)
  print(player.current_hp.."/"..player.max_hp, 32, 104, 8)
- print("xp: ", 8, 112, 7)
+ print("xp: ", 8, 112, 6)
  draw_bar(player.xp_bar, 21, 112)
  print(player.current_xp, 32, 112, 9)
- print("gold: ", 8, 120, 7)
+ print("gold: ", 8, 120, 6)
  print(player.gold, 32, 120, 10) 
 
 draw_buttons(game_buttons)
