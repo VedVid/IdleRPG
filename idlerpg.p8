@@ -2,47 +2,68 @@ pico-8 cartridge // http://www.pico-8.com
 version 33
 __lua__
 function _init()
- game_state = "hub"
+ button_chosen = 1
+ game_buttons = make_game_menu()
+ eq_buttons = make_eq_menu()
+ game_place = "dungeon"
+ game_fight = false
+ game_scene = "main screen"
  player = make_player()
  enemy = make_enemy()
 end
 
 function _update()
  calc_player_eq()
- if game_state == "hub" then
-  restart_bar(player.attack_bar)
-  restart_bar(enemy.attack_bar)
-  if (btn(4)) game_state = "fight"
+
+ if game_scene == "main screen" then
+
+  if not game_fight then
+   restart_bar(player.attack_bar)
+   restart_bar(enemy.attack_bar)
+  end
+  
+  if game_fight then
+   animate_bar(player.attack_bar)
+   animate_bar(enemy.attack_bar)
+   fight(player, enemy)
+  end
+
+  if (btnp(4)) then
+   if not game_fight then
+    if button_chosen == 1 then
+     game_scene = "eq"
+    elseif button_chosen == 2 then
+     game_fight = true
+    end
+   end
+  end
+
+  player.hp_bar.frame =
+   calc_static_bar(player.current_hp,
+                   player.max_hp)
+  player.xp_bar.frame =
+   calc_static_bar(player.current_xp,
+                   player.xp_to_lvl_up)
+
+  choose_button(game_buttons, "v")
+
+ elseif game_scene == "eq" then
+  if (btnp(4)) then
+   if button_chosen == 1 then
+    game_scene = "main screen"
+   end
+  end
+  choose_button(eq_buttons, "h")
  end
- if game_state == "fight" then
-  animate_bar(player.attack_bar)
-  animate_bar(enemy.attack_bar)
-  fight(player, enemy)
- end
- player.hp_bar.frame =
-  calc_static_bar(player.current_hp,
-                  player.max_hp)
- player.xp_bar.frame =
-  calc_static_bar(player.current_xp,
-                  player.xp_to_lvl_up)
 end
 
 function _draw()
  cls()
- print(game_state, 4, 4, 7)
- print("p.attack:", 8, 16, 7)
- draw_bar(player.attack_bar, 48, 16)
- draw_eq(8, 32, player.equipment)
- print("hp: ", 8, 104, 7)
- draw_bar(player.hp_bar, 21, 104)
- print(player.current_hp.."/"..player.max_hp, 32, 104, 8)
- print("xp: ", 8, 112, 7)
- draw_bar(player.xp_bar, 21, 112)
- print(player.current_xp, 32, 112, 9)
- print("gold: ", 8, 120, 7)
- print(player.gold, 32, 120, 10) 
- print("e.attack:", 64, 16, 7)
- draw_bar(enemy.attack_bar, 104, 16)
+ if (game_scene == "main screen") then
+  draw_main_scene()
+ elseif (game_scene == "eq") then
+  draw_eq_screen()
+ end
 end
 
 -->8
@@ -205,10 +226,99 @@ function fight(player, enemy)
   end
  end
  if all_alive == false then
-  game_state = "hub"
+  game_fight = false
  end
 end
 
+-->8
+function make_button(x, y, text)
+ local button = {}
+ button.x = x
+ button.y = y
+ button.text = text
+ return button
+end
+
+function make_game_menu()
+ local buttons = {}
+ local eq_button = make_button(100,
+  104, "eq")
+ add(buttons, eq_button)
+ local explore_button = make_button(
+  100, 112, "explore")
+ add(buttons, explore_button)
+ return buttons
+end
+
+function draw_buttons(buttons)
+ for i = 1, #buttons do
+  col = 6
+  if i == button_chosen then
+   col = 7
+  end
+  print(buttons[i].text,
+   buttons[i].x,
+   buttons[i].y,
+   col)
+ end
+end
+
+function make_eq_menu()
+ local buttons = {}
+ local back_button = make_button(100,
+  104, "go back")
+ add(buttons, back_button)
+ return buttons
+end
+
+function choose_button(buttons, layout)
+ -- default layout is "h"orizontal
+ local prev_item = 0
+ local next_item = 1
+ if (layout == "v") then
+  prev_item = 2
+  next_item = 3
+ end
+ if (btnp(prev_item)) then
+  button_chosen -= 1
+  if (button_chosen <= 0) then
+   button_chosen = #buttons
+  end
+ elseif (btnp(next_item)) then
+  button_chosen += 1
+  if (button_chosen > #buttons) then
+   button_chosen = 1
+  end
+ end
+end
+
+-->8
+function draw_main_scene()
+ print(game_place, 8, 4, 7)
+ if game_fight then
+  print("fight", 48, 4, 8)
+ end
+ print("p.attack:", 8, 16, 7)
+ draw_bar(player.attack_bar, 48, 16)
+ print("e.attack:", 64, 16, 7)
+ draw_bar(enemy.attack_bar, 104, 16)
+ 
+ print("hp: ", 8, 104, 7)
+ draw_bar(player.hp_bar, 21, 104)
+ print(player.current_hp.."/"..player.max_hp, 32, 104, 8)
+ print("xp: ", 8, 112, 7)
+ draw_bar(player.xp_bar, 21, 112)
+ print(player.current_xp, 32, 112, 9)
+ print("gold: ", 8, 120, 7)
+ print(player.gold, 32, 120, 10) 
+
+draw_buttons(game_buttons)
+end
+
+function draw_eq_screen()
+ draw_eq(8, 32, player.equipment)
+ draw_buttons(eq_buttons)
+end
 __gfx__
 00000000999999999999999999999999999999998888888888888888888888888888888833333333333333333333333333333333000000000000000000000000
 00000000900000099aa000099aaaa0099aaaaaa9800000088ee000088eeee0088eeeeee8300000033bb000033bbbb0033bbbbbb3000000000000000000000000
@@ -216,6 +326,16 @@ __gfx__
 00077000900000099aa000099aaaa0099aaaaaa9800000088ee000088eeee0088eeeeee8300000033bb000033bbbb0033bbbbbb3000000000000000000000000
 00077000999999999999999999999999999999998888888888888888888888888888888833333333333333333333333333333333000000000000000000000000
 00700700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+cccccccc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+c000000c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+c000000c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+c000000c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+c000000c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+c000000c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+c000000c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+cccccccc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __label__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
