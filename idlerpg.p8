@@ -5,15 +5,18 @@ function _init()
  button_chosen = 1
  game_buttons = make_game_menu()
  eq_buttons = make_eq_menu()
+ dungeon = make_dungeon()
+ dungeon.current_room = 1
  game_place = "dungeon"
  game_fight = false
  game_scene = "main screen"
  player = make_player()
- enemy = make_enemy()
+ enemy = nil
 end
 
 function _update()
  calc_player_eq()
+ enemy = dungeon.rooms[dungeon.current_room].enemy
 
  if game_scene == "main screen" then
   handle_main_screen()
@@ -220,6 +223,7 @@ function fight(player, enemy)
   if (enemy.current_hp <= 0) then
    player.current_xp += enemy.xp
    player.gold += enemy.gold
+   dungeon.current_room += 1
    all_alive = false
   end
  end
@@ -301,9 +305,10 @@ end
 
 -->8
 function draw_main_scene()
- print(game_place, 8, 4, 6)
+ print(game_place..", room "..dungeon.current_room.." (lvl."..dungeon.level..")",
+  8, 4, 6)
  if game_fight then
-  print("fight", 48, 4, 8)
+  print("fight", 108, 4, 8)
  end
  print("p.attack:", 8, 16, 6)
  draw_bar(player.attack_bar, 48, 16)
@@ -326,6 +331,23 @@ function draw_eq_screen()
  draw_eq(8, 32, player.equipment)
  draw_buttons(eq_buttons)
 end
+-->8
+function make_dungeon()
+ local dungeon = {}
+ dungeon.name = "dungeon"
+ dungeon.level = 1
+ dungeon.current_room = 1
+ local rooms = {}
+ local length = 5
+ for i=1, length do
+  local room = {}
+  room.enemy = make_enemy()
+  add(rooms, room)
+ end
+ dungeon.rooms = rooms
+ return dungeon
+end
+ 
 __gfx__
 00000000999999999999999999999999999999998888888888888888888888888888888833333333333333333333333333333333000000000000000000000000
 00000000900000099aa000099aaaa0099aaaaaa9800000088ee000088eeee0088eeeeee8300000033bb000033bbbb0033bbbbbb3000000000000000000000000
