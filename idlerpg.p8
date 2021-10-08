@@ -16,45 +16,9 @@ function _update()
  calc_player_eq()
 
  if game_scene == "main screen" then
-
-  if not game_fight then
-   restart_bar(player.attack_bar)
-   restart_bar(enemy.attack_bar)
-  end
-  
-  if game_fight then
-   animate_bar(player.attack_bar)
-   animate_bar(enemy.attack_bar)
-   fight(player, enemy)
-  end
-
-  if (btnp(4)) then
-   if not game_fight then
-    if button_chosen == 1 then
-     game_fight = true
-    elseif button_chosen == 2 then
-     button_chosen = 1
-     game_scene = "eq"
-    end
-   end
-  end
-
-  player.hp_bar.frame =
-   calc_static_bar(player.current_hp,
-                   player.max_hp)
-  player.xp_bar.frame =
-   calc_static_bar(player.current_xp,
-                   player.xp_to_lvl_up)
-
-  choose_button(game_buttons, "v")
-
+  handle_main_screen()
  elseif game_scene == "eq" then
-  if (btnp(4)) then
-   if button_chosen == 1 then
-    game_scene = "main screen"
-   end
-  end
-  choose_button(eq_buttons, "h")
+  handle_eq_screen()
  end
 end
 
@@ -65,6 +29,48 @@ function _draw()
  elseif (game_scene == "eq") then
   draw_eq_screen()
  end
+end
+
+function handle_main_screen()
+ if not game_fight then
+  restart_bar(player.attack_bar)
+  restart_bar(enemy.attack_bar)
+ end
+ 
+ if game_fight then
+  animate_bar(player.attack_bar)
+  animate_bar(enemy.attack_bar)
+  fight(player, enemy)
+ end
+
+ if (btnp(4)) then
+  if not game_fight then
+   if button_chosen == 1 then
+    game_fight = true
+   elseif button_chosen == 2 then
+    button_chosen = 1
+    game_scene = "eq"
+   end
+  end
+ end
+
+ player.hp_bar.frame =
+  calc_static_bar(player.current_hp,
+                  player.max_hp)
+ player.xp_bar.frame =
+  calc_static_bar(player.current_xp,
+                  player.xp_to_lvl_up)
+
+ choose_button(game_buttons, "v")
+end
+
+function handle_eq_screen()
+ if (btnp(4)) then
+  if button_chosen == 1 then
+   game_scene = "main screen"
+  end
+ end
+ choose_button(eq_buttons, "h")
 end
 
 -->8
