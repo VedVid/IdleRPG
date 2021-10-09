@@ -246,6 +246,7 @@ function fight(player, enemy)
     dungeon.current_room = 0
     enemy = nil
     dungeon = make_dungeon()
+    player.current_hp = player.max_hp
     game_place = "town"
   end
    all_alive = false
