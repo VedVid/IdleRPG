@@ -63,6 +63,14 @@ function handle_main_screen()
  end
 
  if (game_place == "town") then
+  if (player.healing_bar.frame == 1 and
+   player.healing_bar.tick == 0 and
+   player.current_hp < player.max_hp) then
+   player.current_hp += flr(rnd(player.max_hp / 4)) + 1
+   if player.current_hp > player.max_hp then
+    player.current_hp = player.max_hp
+   end
+  end
   if (btnp(4)) then
    if button_chosen == 1 then
     dungeon.current_room = 1
@@ -129,8 +137,12 @@ function make_player()
  player.damage = 0
  player.attack_speed = 0
  player.defense = 0
+ player.healing_speed = 3
  player.current_xp = 0
  player.xp_to_lvl_up = 100
+ player.healing_bar =
+  make_progress_bar({5,6,7,8},
+                    player.healing_speed)
  player.attack_bar = 
   make_progress_bar({9,10,11,12},
                     player.attack_speed)
@@ -246,7 +258,6 @@ function fight(player, enemy)
     dungeon.current_room = 0
     enemy = nil
     dungeon = make_dungeon()
-    player.current_hp = player.max_hp
     game_place = "town"
   end
    all_alive = false
@@ -354,6 +365,13 @@ function draw_main_scene()
   draw_buttons(dungeon_buttons)
  elseif (game_place == "town") then
   print(game_place, 8, 4, 6)
+  if (player.current_hp < player.max_hp) then
+   print("healing", 80, 4, 8)
+   draw_bar(player.healing_bar, 80, 16)
+   animate_bar(player.healing_bar)
+  else
+   restart_bar(player.healing_bar)
+  end
   draw_buttons(town_buttons)
  end
  
