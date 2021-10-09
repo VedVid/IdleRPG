@@ -3,11 +3,13 @@ version 33
 __lua__
 function _init()
  button_chosen = 1
- game_buttons = make_game_menu()
+ dungeon_buttons = make_dungeon_menu()
+ town_buttons = make_town_menu()
  eq_buttons = make_eq_menu()
+ town = make_town()
  dungeon = make_dungeon()
- dungeon.current_room = 1
- game_place = "dungeon"
+ dungeon.current_room = 0
+ game_place = "town"
  game_fight = false
  game_scene = "main screen"
  player = make_player()
@@ -16,8 +18,9 @@ end
 
 function _update()
  calc_player_eq()
- enemy = dungeon.rooms[dungeon.current_room].enemy
-
+ if (game_place == "dungeon") then
+  enemy = dungeon.rooms[dungeon.current_room].enemy
+ end
  if game_scene == "main screen" then
   handle_main_screen()
  elseif game_scene == "eq" then
@@ -35,21 +38,36 @@ function _draw()
 end
 
 function handle_main_screen()
- if not game_fight then
-  restart_bar(player.attack_bar)
-  restart_bar(enemy.attack_bar)
- end
+ if (game_place == "dungeon") then
+  if not game_fight then
+   restart_bar(player.attack_bar)
+   restart_bar(enemy.attack_bar)
+  end
  
- if game_fight then
-  animate_bar(player.attack_bar)
-  animate_bar(enemy.attack_bar)
-  fight(player, enemy)
+  if game_fight then
+   animate_bar(player.attack_bar)
+   animate_bar(enemy.attack_bar)
+   fight(player, enemy)
+  end
+
+  if (btnp(4)) then
+   if not game_fight then
+    if button_chosen == 1 then
+     game_fight = true
+    elseif button_chosen == 2 then
+     button_chosen = 1
+     game_scene = "eq"
+    end
+   end
+  end
  end
 
- if (btnp(4)) then
-  if not game_fight then
+ if (game_place == "town") then
+  if (btnp(4)) then
    if button_chosen == 1 then
-    game_fight = true
+    dungeon.current_room = 1
+    enemy = dungeon.rooms[dungeon.current_room].enemy
+    game_place = "dungeon"
    elseif button_chosen == 2 then
     button_chosen = 1
     game_scene = "eq"
@@ -64,7 +82,7 @@ function handle_main_screen()
   calc_static_bar(player.current_xp,
                   player.xp_to_lvl_up)
 
- choose_button(game_buttons, "v")
+ choose_button(dungeon_buttons, "v")
 end
 
 function handle_eq_screen()
@@ -224,6 +242,12 @@ function fight(player, enemy)
    player.current_xp += enemy.xp
    player.gold += enemy.gold
    dungeon.current_room += 1
+   if (dungeon.current_room > dungeon.length) then
+    dungeon.current_room = 0
+    enemy = nil
+    dungeon = make_dungeon()
+    game_place = "town"
+  end
    all_alive = false
   end
  end
@@ -250,10 +274,21 @@ function make_button(x, y, text)
  return button
 end
 
-function make_game_menu()
+function make_dungeon_menu()
  local buttons = {}
  local explore_button = make_button(
   100, 104, "explore")
+ add(buttons, explore_button)
+ local eq_button = make_button(100,
+  112, "eq")
+ add(buttons, eq_button)
+ return buttons
+end
+
+function make_town_menu()
+ local buttons = {}
+ local explore_button = make_button(
+  100, 104, "delve")
  add(buttons, explore_button)
  local eq_button = make_button(100,
   112, "eq")
@@ -305,15 +340,21 @@ end
 
 -->8
 function draw_main_scene()
- print(game_place..", room "..dungeon.current_room.." (lvl."..dungeon.level..")",
-  8, 4, 6)
- if game_fight then
-  print("fight", 108, 4, 8)
+ if (game_place == "dungeon") then
+  print(game_place..", room "..dungeon.current_room.." (lvl."..dungeon.level..")",
+   8, 4, 6)
+  print("p.attack:", 8, 16, 6)
+  draw_bar(player.attack_bar, 48, 16)
+  print("e.attack:", 64, 16, 6)
+  draw_bar(enemy.attack_bar, 104, 16)
+  if game_fight then
+   print("fight", 108, 4, 8)
+  end
+  draw_buttons(dungeon_buttons)
+ elseif (game_place == "town") then
+  print(game_place, 8, 4, 6)
+  draw_buttons(town_buttons)
  end
- print("p.attack:", 8, 16, 6)
- draw_bar(player.attack_bar, 48, 16)
- print("e.attack:", 64, 16, 6)
- draw_bar(enemy.attack_bar, 104, 16)
  
  print("hp: ", 8, 104, 6)
  draw_bar(player.hp_bar, 21, 104)
@@ -322,9 +363,7 @@ function draw_main_scene()
  draw_bar(player.xp_bar, 21, 112)
  print(player.current_xp, 32, 112, 9)
  print("gold: ", 8, 120, 6)
- print(player.gold, 32, 120, 10) 
-
-draw_buttons(game_buttons)
+ print(player.gold, 32, 120, 10)
 end
 
 function draw_eq_screen()
@@ -336,10 +375,10 @@ function make_dungeon()
  local dungeon = {}
  dungeon.name = "dungeon"
  dungeon.level = 1
+ dungeon.length = 3
  dungeon.current_room = 1
  local rooms = {}
- local length = 5
- for i=1, length do
+ for i=1, dungeon.length do
   local room = {}
   room.enemy = make_enemy()
   add(rooms, room)
@@ -347,7 +386,12 @@ function make_dungeon()
  dungeon.rooms = rooms
  return dungeon
 end
- 
+
+function make_town()
+ local town = {}
+ town.name = "town"
+ return town
+end
 __gfx__
 00000000999999999999999999999999999999998888888888888888888888888888888833333333333333333333333333333333000000000000000000000000
 00000000900000099aa000099aaaa0099aaaaaa9800000088ee000088eeee0088eeeeee8300000033bb000033bbbb0033bbbbbb3000000000000000000000000
