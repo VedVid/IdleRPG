@@ -68,7 +68,7 @@ function handle_main_screen()
   if (player.healing_bar.frame == 1 and
    player.healing_bar.tick == 0 and
    player.current_hp < player.max_hp) then
-   player.current_hp += flr(rnd(player.max_hp / 4)) + 1
+   player.current_hp += flr(rnd(player.healing_speed)) + 1
    if player.current_hp > player.max_hp then
     player.current_hp = player.max_hp
    end
@@ -139,14 +139,14 @@ function make_player()
  player.damage = 0
  player.attack_speed = 0
  player.defense = 0
- player.healing_speed = 3
+ player.healing_speed = 1
  player.level = 1
  player.current_xp = 0
  player.xp_to_lvl_up = 100
  player.total_xp = 0
  player.healing_bar =
   make_progress_bar({5,6,7,8},
-                    player.healing_speed)
+                    4)
  player.attack_bar = 
   make_progress_bar({9,10,11,12},
                     player.attack_speed)
