@@ -2,18 +2,20 @@ pico-8 cartridge // http://www.pico-8.com
 version 33
 __lua__
 function _init()
+ level_up_time_length = 30*3
+ level_up_time_current = 0
  button_chosen = 1
  dungeon_buttons = make_dungeon_menu()
  town_buttons = make_town_menu()
  eq_buttons = make_eq_menu()
+ player = make_player()
+ enemy = nil
  town = make_town()
  dungeon = make_dungeon()
  dungeon.current_room = 0
  game_place = "town"
  game_fight = false
  game_scene = "main screen"
- player = make_player()
- enemy = nil
 end
 
 function _update()
@@ -138,8 +140,10 @@ function make_player()
  player.attack_speed = 0
  player.defense = 0
  player.healing_speed = 3
+ player.level = 1
  player.current_xp = 0
  player.xp_to_lvl_up = 100
+ player.total_xp = 0
  player.healing_bar =
   make_progress_bar({5,6,7,8},
                     player.healing_speed)
@@ -252,6 +256,16 @@ function fight(player, enemy)
   end
   if (enemy.current_hp <= 0) then
    player.current_xp += enemy.xp
+   player.total_xp += enemy.xp
+   if (player.current_xp >= player.xp_to_lvl_up) then
+    player.current_xp -= player.xp_to_lvl_up
+    player.xp_to_lvl_up *= 1.25
+    player.xp_to_lvl_up = flr(player.xp_to_lvl_up)
+    player.level += 1
+    player.max_hp += flr(rnd(10))+1
+    player.current_hp = player.max_hp
+    level_up_time_current = level_up_time_length
+   end
    player.gold += enemy.gold
    dungeon.current_room += 1
    if (dungeon.current_room > dungeon.length) then
@@ -375,14 +389,27 @@ function draw_main_scene()
   draw_buttons(town_buttons)
  end
  
- print("hp: ", 8, 104, 6)
- draw_bar(player.hp_bar, 21, 104)
- print(player.current_hp.."/"..player.max_hp, 32, 104, 8)
- print("xp: ", 8, 112, 6)
- draw_bar(player.xp_bar, 21, 112)
- print(player.current_xp, 32, 112, 9)
- print("gold: ", 8, 120, 6)
- print(player.gold, 32, 120, 10)
+ print("hp: ", 8, 96, 6)
+ draw_bar(player.hp_bar, 23, 96)
+ print(player.current_hp.."/"..player.max_hp, 36, 96, 8)
+ print("xp: ", 8, 104, 6)
+ draw_bar(player.xp_bar, 23, 104)
+ print(player.current_xp, 36, 104, 9)
+ print("level: ", 8, 112, 6)
+ print(player.level, 36, 112, 9)
+ if (level_up_time_current > 0) then
+  local col = 9
+  if (level_up_time_current <= 15) then col = 10
+  elseif (level_up_time_current <= 30) then col = 9
+  elseif (level_up_time_current <= 45) then col = 10
+  elseif (level_up_time_current <= 60) then col = 9
+  elseif (level_up_time_current <= 75) then col = 10
+  else col = 9 end
+  print("level up!", 48, 112, col)
+  level_up_time_current -= 1
+ end
+ print("gold:  ", 8, 120, 6)
+ print(player.gold, 36, 120, 10)
 end
 
 function draw_eq_screen()
@@ -393,7 +420,7 @@ end
 function make_dungeon()
  local dungeon = {}
  dungeon.name = "dungeon"
- dungeon.level = 1
+ dungeon.level = player.level
  dungeon.length = 3
  dungeon.current_room = 1
  local rooms = {}
