@@ -134,8 +134,8 @@ end
 -->8
 function make_player()
  local player = {}
- player.max_hp = 10
- player.current_hp = 10
+ player.max_hp = 20
+ player.current_hp = 20
  player.damage = 0
  player.attack_speed = 0
  player.defense = 0
@@ -228,15 +228,15 @@ function draw_eq(x, y, eq)
  print("feet:   "..eq.feet.name.." (lvl."..eq.feet.lvl..")", x, y+56, 6)
 end
 
-function make_enemy()
+function make_enemy(lvl)
  local enemy = {}
- enemy.max_hp = 5
- enemy.current_hp = 5
- enemy.damage = 2
- enemy.attack_speed = 5
- enemy.defense = 2
- enemy.xp = 50
- enemy.gold = 25
+ enemy.max_hp = lvl*(flr(rnd(4))+3)
+ enemy.current_hp = enemy.max_hp
+ enemy.damage = lvl*(flr(rnd(3))+2)
+ enemy.attack_speed = lvl*(flr(rnd(3))+3)
+ enemy.defense = lvl*(flr(rnd(3))+2)
+ enemy.xp = lvl*flr((enemy.max_hp/10)+enemy.damage+enemy.attack_speed+enemy.defense)
+ enemy.gold = flr(rnd(enemy.xp)+enemy.xp/2)
  enemy.attack_bar =
   make_progress_bar({5,6,7,8},
                     enemy.attack_speed)
@@ -426,7 +426,7 @@ function make_dungeon()
  local rooms = {}
  for i=1, dungeon.length do
   local room = {}
-  room.enemy = make_enemy()
+  room.enemy = make_enemy(dungeon.level)
   add(rooms, room)
  end
  dungeon.rooms = rooms
