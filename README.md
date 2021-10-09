@@ -31,9 +31,9 @@ Project is public, released under FreeBSD license.
 
 #### How IdleRPG looks like?
 
-![IdleRPG - fighting the enemy](/screenshots/IdleRPG - fighting the enemy.png)
+![IdleRPG - fighting the enemy](screenshots/IdleRPG%20-%20fighting%20the%20enemy.png)
 
-![IdleRPG - equipment screen](/screenshots/IdleRPG - equipment screen.png)
+![IdleRPG - equipment screen](screenshots/IdleRPG%20-%20equipment%20screen.png)
 
-![IdleRPG - healing wounds in town](/screenshots/IdleRPG - healing wounds in town.png)
+![IdleRPG - healing wounds in town](screenshots/IdleRPG%20-%20healing%20wounds%20in%20town.png)
 
